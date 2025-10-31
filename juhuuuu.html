@@ -1,0 +1,973 @@
+<!DOCTYPE a5185913e6594b29ad57a0642f4c979d>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Klassenplattform 8B — Clean + Emoji Game</title>
+<style>
+:root{
+  --bg:#07111a; --card:#0b1722; --muted:#9fb0bf;
+  --accent-1:#27e3c4; --accent-2:#36a9ff; --text:#e6eef6;
+  --soft: rgba(255,255,255,0.02); --radius:12px;
+}
+body.light{ --bg:#f6f8fb; --card:#ffffff; --muted:#546070; --text:#0b1220; --soft: rgba(0,0,0,0.04); }
+body.green{ --bg:#071614; --card:#081815; --muted:#9fbfae; --accent-1:#6ee37f; --accent-2:#27e3c4; --text:#e9f7ef; --soft: rgba(255,255,255,0.02); }
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:1100px;margin:18px auto;padding:0 16px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;flex-direction:column}
+.appName{font-weight:800;font-size:18px}
+.appSub{font-size:12px;color:var(--muted)}
+.controls{display:flex;gap:10px;align-items:center}
+.iconBtn{background:transparent;border:none;padding:8px;border-radius:10px;color:var(--text);cursor:pointer}
+.iconBtn:hover{background:var(--soft)}
+.profileBtn{width:44px;height:44px;border-radius:12px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#001a1a;font-weight:800;cursor:pointer}
+.leftLayout{display:flex;gap:16px;margin-top:16px}
+.sidebar{width:220px;background:var(--card);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.logo{display:flex;align-items:center;gap:10px}
+.logoCircle{width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#021017;font-weight:800}
+.navItem{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;cursor:pointer;color:var(--text)}
+.navItem:hover{background:var(--soft)}
+.active{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#001a1a}
+.small{font-size:13px;color:var(--muted)}
+.content{flex:1;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.35)}
+.hero{display:flex;align-items:center;justify-content:space-between;padding:28px;border-radius:14px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent)}
+.heroGreeting{font-size:28px;font-weight:800;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.input{width:100%;padding:10px;border-radius:10px;border:none;background:var(--soft);color:var(--text);margin-top:8px}
+.textarea{min-height:96px;padding:10px;border-radius:10px;border:none;background:var(--soft);color:var(--text);resize:vertical}
+.postRow{display:flex;gap:12px;align-items:flex-start}
+.initialCircle{width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#001a1a}
+.postCard{display:flex;gap:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,0.02);margin-top:12px}
+.meta{font-size:12px;color:var(--muted)}
+.actions{display:flex;gap:8px;margin-top:8px}
+.btn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;background:transparent;color:var(--text)}
+.btn.primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#001a1a;font-weight:700}
+.comment{background:var(--soft);padding:8px;border-radius:8px;margin-top:8px}
+.chatSidebar{position:fixed;right:18px;top:84px;width:360px;height:76vh;background:var(--card);border-radius:12px;padding:12px;box-shadow:0 12px 36px rgba(0,0,0,0.5);transform:translateX(420px);transition:transform .22s;z-index:99;display:flex;flex-direction:column}
+.chatSidebar.open{transform:translateX(0)}
+.chatUsers{display:flex;flex-direction:column;gap:8px;max-height:160px;overflow:auto;margin-top:8px}
+.chatWindow{display:flex;flex-direction:column;flex:1;margin-top:8px;overflow:hidden}
+.messages{flex:1;overflow:auto;padding:8px}
+.msg{margin-bottom:8px;max-width:82%}
+.msg.me{margin-left:auto;text-align:right}
+.msg .bubble{display:inline-block;padding:8px 10px;border-radius:10px;background:var(--soft)}
+.msg.me .bubble{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#001a1a}
+.unread{background:#ff3b30;color:white;border-radius:10px;padding:2px 6px;font-size:12px;margin-left:8px}
+.profilePanel{position:fixed;right:18px;top:84px;width:320px;background:var(--card);padding:14px;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.5);display:none;z-index:100}
+.colorPreview{width:40px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);cursor:pointer}
+.colorRow{display:flex;gap:8px;align-items:center;margin-top:8px}
+.emojiGame{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px}
+.emojiBig{font-size:72px;cursor:pointer;user-select:none;transition:transform .08s}
+.particle{position:fixed;pointer-events:none;font-size:20px;opacity:0;transform:translate(-50%,-50%) scale(.6);transition:transform .45s,opacity .45s}
+.progressBar{height:8px;border-radius:8px;background:var(--soft);overflow:hidden}
+.progressFill{height:100%;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));width:0%}
+.hidden{display:none}
+.footer{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
+/* responsive */
+@media(max-width:980px){ .leftLayout{flex-direction:column} .sidebar{width:100%} .chatSidebar{right:8px;width:92vw;top:80px} .profilePanel{right:8px} }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <div class="appName">Klasse 8B</div>
+      <div class="appSub small">Schulplattform — Clean & Fun</div>
+    </div>
+    <div class="controls">
+      <button id="bellBtn" class="iconBtn" title="Benachrichtigungen">🔔 <span id="bellCount" class="unread hidden">0</span></button>
+      <button id="chatToggle" class="iconBtn" title="Chat">💬</button>
+      <div id="profileBtn" class="profileBtn" title="Profil">?</div>
+    </div>
+  </div>
+
+    <div id="authCard" class="card authCard">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2 style="margin:0">Willkommen</h2>
+        <div class="small">Melde dich an oder registriere dich (Kürzel = <b>8bschul</b>).</div>
+      </div>
+      <div style="text-align:right" class="small">Klasse 8B</div>
+    </div>
+
+    <div id="authForms" style="margin-top:14px;display:flex;gap:14px">
+      <div style="flex:1">
+        <div id="loginForm">
+          <input id="loginUser" class="input" placeholder="Benutzername">
+          <input id="loginPass" class="input" type="password" placeholder="Passwort">
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button id="showReg" class="btn">Registrieren</button>
+            <button id="loginBtn" class="btn primary">Anmelden</button>
+          </div>
+          <div id="loginMsg" class="small" style="color:#ff8aa1;margin-top:8px"></div>
+        </div>
+
+        <div id="regForm" class="hidden" style="margin-top:10px">
+          <input id="regFirst" class="input" placeholder="Vorname">
+          <input id="regLast" class="input" placeholder="Nachname">
+          <input id="regUser" class="input" placeholder="Gewünschter Benutzername">
+          <input id="regPass" class="input" type="password" placeholder="Passwort">
+          <input id="regCode" class="input" placeholder="Kürzel (8bschul)">
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button id="cancelReg" class="btn">Abbrechen</button>
+            <button id="regBtn" class="btn primary">Registrieren</button>
+          </div>
+          <div id="regMsg" class="small" style="color:#7ee3ff;margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div style="width:280px">
+        <div class="card">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <div class="logoCircle" style="width:72px;height:72px;font-size:28px">8B</div>
+            <div style="font-weight:700">Klasse 8B</div>
+            <div class="small">Gutes Lernen. Besserer Stil.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div id="appLayout" class="leftLayout hidden">
+    <div class="sidebar">
+      <div class="logo">
+        <div class="logoCircle">8B</div>
+        <div style="display:flex;flex-direction:column">
+          <div style="font-weight:800">Klasse 8B</div>
+          <div class="small">Dashboard</div>
+        </div>
+      </div>
+
+      <div id="navHome" class="navItem active">🏠 Start</div>
+      <div id="navPosts" class="navItem">📰 Posts</div>
+      <div id="navChat" class="navItem">💬 Chat</div>
+      <div id="navGame" class="navItem">🕹️ Emoji-Klicker</div>
+      <div id="navProfile" class="navItem">⚙️ Profil</div>
+      <div id="navLogout" class="navItem">🚪 Logout</div>
+
+      <div class="sidebarFooter small">Angemeldet als <span id="sidebarUser">—</span></div>
+    </div>
+
+    <div class="content">
+      <div id="viewHome" class="card">
+        <div class="hero">
+          <div>
+            <div class="heroGreeting" id="heroGreeting">Hallo, Guest 👋</div>
+            <div class="small" id="heroSub">Schön, dass du da bist — wähle links ein Menü.</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">Schnellzugriff</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="quickPost" class="btn">📝 Posten</button>
+              <button id="quickChat" class="btn">💬 Chat</button>
+              <button id="quickGame" class="btn">🎮 Spiel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewPosts" class="hidden">
+        <div class="card">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div class="initialCircle" id="composerInitial">A</div>
+            <div style="flex:1">
+              <textarea id="postInput" class="textarea" placeholder="Schreibe etwas für die Klasse..."></textarea>
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+                <button id="postBtn" class="btn primary">Posten</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="feedArea"></div>
+      </div>
+
+      <div id="viewChat" class="hidden">
+        <div class="card" style="display:flex;gap:12px">
+          <div style="width:260px">
+            <div class="small">Kontakte</div>
+            <div id="contactsList" class="chatUsers"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column">
+            <div class="small" id="chatHeaderFull">Wähle einen Kontakt</div>
+            <div id="chatFullMessages" class="messages" style="background:transparent"></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input id="chatFullInput" class="input" placeholder="Nachricht...">
+              <button id="chatFullSend" class="btn primary">Senden</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewGame" class="hidden">
+        <div class="card emojiGame">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="initialCircle" id="gameInitial" style="width:64px;height:64px;font-size:24px">EK</div>
+            <div>
+              <div style="font-weight:800" id="gameTitle">Emoji Klicker</div>
+              <div class="small">Klicke das Emoji, sammle Punkte & schalte neue frei!</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:center;margin-top:6px">
+            <div style="font-size:18px">Punkte:</div>
+            <div id="gamePoints" style="font-weight:800;font-size:20px">0</div>
+            <div style="flex:1">
+              <div class="progressBar"><div id="gameProgress" class="progressFill"></div></div>
+            </div>
+          </div>
+
+          <div style="margin-top:8px;display:flex;gap:12px;align-items:center">
+            <div id="activeEmoji" class="emojiBig">😀</div>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+              <div class="small">Freigeschaltet:</div>
+              <div id="unlockedList" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+            <button id="upgradeBtn" class="btn">Upgrade (x2 für 20 Punkte)</button>
+            <button id="resetGame" class="btn">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewProfile" class="hidden">
+        <div class="card" style="display:flex;gap:12px;align-items:center">
+          <div class="initialCircle" id="profileInitial" style="width:84px;height:84px;font-size:36px">A</div>
+          <div style="flex:1">
+            <div id="profileName" style="font-weight:800">Name</div>
+            <div class="small" id="profileUser">@user</div>
+            <div style="margin-top:12px">
+              <label class="small">Hintergrund (Live-Preview)</label>
+              <div class="colorRow">
+                <div id="previewDark" class="colorPreview" style="background:#07111a"></div>
+                <div id="previewLight" class="colorPreview" style="background:#f6f8fb"></div>
+                <div id="previewGreen" class="colorPreview" style="background:#071614"></div>
+              </div>
+              <select id="themeSelect" class="input" style="margin-top:8px">
+                <option value="dark">Dunkel (Standard)</option>
+                <option value="light">Hell</option>
+                <option value="green">Grün</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">© Klasse 8B — Clean UI</div>
+    </div>
+
+  </div>
+</div>
+
+<div id="chatSidebar" class="chatSidebar">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="font-weight:800">Chat</div>
+    <div>
+      <button id="chatClose" class="iconBtn">✖</button>
+    </div>
+  </div>
+
+  <div style="margin-top:8px">
+    <div class="small">Kontakte</div>
+    <div id="chatContactsRight" class="chatUsers"></div>
+  </div>
+
+  <div class="chatWindow" id="chatSidebarWindow" style="display:none">
+    <div id="chatSidebarTitle" style="padding:8px;border-bottom:1px solid var(--soft)">—</div>
+    <div id="chatSidebarMessages" class="messages"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input id="chatSidebarInput" class="input" placeholder="Nachricht...">
+      <button id="chatSidebarSend" class="btn primary">Senden</button>
+    </div>
+  </div>
+</div>
+
+<div id="profilePanel" class="profilePanel">
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+    <div class="initialCircle" id="panelInitialLarge" style="width:96px;height:96px;font-size:36px">A</div>
+    <div id="panelName" style="font-weight:800">Name</div>
+    <div id="panelUser" class="small">@user</div>
+
+    <div style="width:100%;margin-top:8px">
+      <label class="small">Hintergrund (Live-Vorschau)</label>
+      <div class="colorRow">
+        <div id="panelPreviewDark" class="colorPreview" style="background:#07111a"></div>
+        <div id="panelPreviewLight" class="colorPreview" style="background:#f6f8fb"></div>
+        <div id="panelPreviewGreen" class="colorPreview" style="background:#071614"></div>
+      </div>
+      <select id="panelThemeSelect" class="input" style="margin-top:8px">
+        <option value="dark">Dunkel</option>
+        <option value="light">Hell</option>
+        <option value="green">Grün</option>
+      </select>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="panelClose" class="btn">Schließen</button>
+      <button id="panelLogout" class="btn">Logout</button>
+    </div>
+  </div>
+</div>
+
+<footer style="height:20px"></footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+import { getDatabase, ref, push, set, onValue, update, get, child } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsW9JKhyBmlxv-BAcAa4gyHOX6R-KLoQA",
+  authDomain: "englischfairytale8b.firebaseapp.com",
+  databaseURL: "https://englischfairytale8b-default-rtdb.firebaseio.com",
+  projectId: "englischfairytale8b",
+  storageBucket: "englischfairytale8b.appspot.com",
+  messagingSenderId: "1009055770845",
+  appId: "1:1009055770845:web:56ab77e4788b4bc4ced334"
+};
+initializeApp(firebaseConfig);
+const db = getDatabase();
+
+/* DOM refs */
+const authCard = document.getElementById('authCard');
+const showReg = document.getElementById('showReg');
+const regForm = document.getElementById('regForm');
+const cancelReg = document.getElementById('cancelReg');
+const regBtn = document.getElementById('regBtn');
+const loginBtn = document.getElementById('loginBtn');
+const loginUser = document.getElementById('loginUser');
+const loginPass = document.getElementById('loginPass');
+const loginMsg = document.getElementById('loginMsg');
+const regMsg = document.getElementById('regMsg');
+
+const appLayout = document.getElementById('appLayout');
+const navHome = document.getElementById('navHome');
+const navPosts = document.getElementById('navPosts');
+const navChat = document.getElementById('navChat');
+const navGame = document.getElementById('navGame');
+const navProfile = document.getElementById('navProfile');
+const navLogout = document.getElementById('navLogout');
+
+const viewHome = document.getElementById('viewHome');
+const viewPosts = document.getElementById('viewPosts');
+const viewChat = document.getElementById('viewChat');
+const viewGame = document.getElementById('viewGame');
+const viewProfile = document.getElementById('viewProfile');
+
+const heroGreeting = document.getElementById('heroGreeting');
+const composerInitial = document.getElementById('composerInitial');
+const postInput = document.getElementById('postInput');
+const postBtn = document.getElementById('postBtn');
+const feedArea = document.getElementById('feedArea');
+
+const contactsList = document.getElementById('contactsList');
+const chatFullMessages = document.getElementById('chatFullMessages');
+const chatFullInput = document.getElementById('chatFullInput');
+const chatFullSend = document.getElementById('chatFullSend');
+const chatHeaderFull = document.getElementById('chatHeaderFull');
+
+const profileBtn = document.getElementById('profileBtn');
+const profilePanel = document.getElementById('profilePanel');
+const panelClose = document.getElementById('panelClose');
+const panelLogout = document.getElementById('panelLogout');
+const panelInitialLarge = document.getElementById('panelInitialLarge');
+const panelName = document.getElementById('panelName');
+const panelUser = document.getElementById('panelUser');
+const panelThemeSelect = document.getElementById('panelThemeSelect');
+
+const themeSelect = document.getElementById('themeSelect');
+const profileInitial = document.getElementById('profileInitial');
+const profileName = document.getElementById('profileName');
+const profileUser = document.getElementById('profileUser');
+const sidebarUser = document.getElementById('sidebarUser');
+
+const chatToggle = document.getElementById('chatToggle');
+const chatSidebar = document.getElementById('chatSidebar');
+const chatContactsRight = document.getElementById('chatContactsRight');
+const chatSidebarWindow = document.getElementById('chatSidebarWindow');
+const chatSidebarMessages = document.getElementById('chatSidebarMessages');
+const chatSidebarTitle = document.getElementById('chatSidebarTitle');
+const chatSidebarInput = document.getElementById('chatSidebarInput');
+const chatSidebarSend = document.getElementById('chatSidebarSend');
+const chatClose = document.getElementById('chatClose');
+
+const bellBtn = document.getElementById('bellBtn');
+const bellCount = document.getElementById('bellCount');
+
+const previewDark = document.getElementById('previewDark');
+const previewLight = document.getElementById('previewLight');
+const previewGreen = document.getElementById('previewGreen');
+const panelPreviewDark = document.getElementById('panelPreviewDark');
+const panelPreviewLight = document.getElementById('panelPreviewLight');
+const panelPreviewGreen = document.getElementById('panelPreviewGreen');
+
+const navGameBtn = document.getElementById('navGame');
+const activeEmoji = document.getElementById('activeEmoji');
+const gamePointsEl = document.getElementById('gamePoints');
+const gameProgress = document.getElementById('gameProgress');
+const unlockedList = document.getElementById('unlockedList');
+const upgradeBtn = document.getElementById('upgradeBtn');
+const resetGameBtn = document.getElementById('resetGame');
+
+let currentUser = null; // {username,first,last,uid,isAdmin,theme}
+let currentChatUid = null; // Der uid des gerade chat-partners
+let unreadTotal = 0;
+let usersCache = {}; // Cache für Benutzerinformationen
+
+/* helpers */
+const uidFor = name => name.replace(/\s+/g,'_').toLowerCase();
+const now = () => Date.now();
+const el = (t,txt)=>{const d=document.createElement(t); if(txt!==undefined) d.textContent=txt; return d;};
+
+/* NAV/helpers */
+function setActive(navEl){
+  [navHome,navPosts,navChat,navGame,navProfile].forEach(n=>n.classList.remove('active'));
+  navEl.classList.add('active');
+}
+function showView(view){
+  [viewHome,viewPosts,viewChat,viewGame,viewProfile].forEach(v=>v.classList.add('hidden'));
+  view.classList.remove('hidden');
+}
+
+/* UI: register/login toggle */
+showReg.addEventListener('click', ()=>{ regForm.classList.remove('hidden'); document.getElementById('loginForm').classList.add('hidden'); });
+document.getElementById('cancelReg').addEventListener('click', ()=>{ regForm.classList.add('hidden'); document.getElementById('loginForm').classList.remove('hidden'); });
+
+/* REGISTER */
+regBtn.addEventListener('click', async ()=>{
+  regMsg.textContent='';
+  const first = document.getElementById('regFirst').value.trim();
+  const last = document.getElementById('regLast').value.trim();
+  const username = document.getElementById('regUser').value.trim();
+  const password = document.getElementById('regPass').value;
+  const code = document.getElementById('regCode').value.trim();
+  if(!first||!last||!username||!password){ regMsg.textContent='Bitte alle Felder ausfüllen.'; return; }
+  if(code !== '8bschul'){ regMsg.textContent='Ungültiges Kürzel.'; return; }
+  const uid = uidFor(username);
+  const userRef = ref(db, `users/${uid}`);
+  const snap = await get(userRef);
+  if(snap.exists()){ regMsg.textContent='Benutzername bereits vergeben.'; return; }
+  await set(userRef, {username,first,last,password,code,uid,isAdmin:false,theme:'dark',points:0,multiplier:1,unlockedEmojis:['😀']});
+  currentUser = {username,first,last,uid,isAdmin:false,theme:'dark',points:0,multiplier:1,unlockedEmojis:['😀']};
+  afterLogin();
+});
+
+/* LOGIN */
+loginBtn.addEventListener('click', async ()=>{
+  loginMsg.textContent='';
+  const username = loginUser.value.trim();
+  const password = loginPass.value;
+  if(username === 'Letsseimen' && password === '261011'){
+    const uid = uidFor(username);
+    const uref = ref(db, `users/${uid}`);
+    const s = await get(uref);
+    if(!s.exists()){
+      await set(uref, {username:'Letsseimen',first:'Seimen',last:'',password:'261011',code:'8bschul',uid,isAdmin:true,theme:'dark',points:0,multiplier:1,unlockedEmojis:['😀']});
+    } else {
+      await update(uref, {isAdmin:true});
+    }
+    currentUser = (await get(uref)).val();
+    afterLogin(); return;
+  }
+  const uid = uidFor(username);
+  const snap = await get(ref(db, `users/${uid}`));
+  if(!snap.exists()){ loginMsg.textContent='Benutzer nicht gefunden.'; return; }
+  const data = snap.val();
+  if(data.password !== password){ loginMsg.textContent='Falsches Passwort.'; return; }
+  if(data.code !== '8bschul'){ loginMsg.textContent='Kürzel ungültig.'; return; }
+  currentUser = {...data};
+  afterLogin();
+});
+
+/* POSTEN-LISTENER */
+postBtn.addEventListener('click', async ()=>{
+  const text = postInput.value.trim();
+  if(!text) return;
+  const p = push(ref(db,'posts'));
+  await set(p, {author: currentUser.username, authorUid: currentUser.uid, text, time: now()});
+  postInput.value='';
+});
+
+
+/* AFTER LOGIN */
+async function afterLogin(){
+  document.getElementById('authCard').style.display='none';
+  document.getElementById('appLayout').classList.remove('hidden');
+  heroGreeting.textContent = `Hallo, ${currentUser.first || currentUser.username} 👋`;
+  composerInitial.textContent = (currentUser.username||'?').charAt(0).toUpperCase();
+  profileInitial.textContent = (currentUser.username||'?').charAt(0).toUpperCase();
+  panelInitialLarge.textContent = (currentUser.username||'?').charAt(0).toUpperCase();
+  panelName.textContent = `${currentUser.first || ''} ${currentUser.last || ''}`;
+  panelUser.textContent = `@${currentUser.username}`;
+  profileBtn.textContent = (currentUser.username||'?').charAt(0).toUpperCase();
+  sidebarUser.textContent = currentUser.username;
+
+  // apply theme saved
+  if(currentUser.theme === 'light'){ document.body.classList.add('light'); document.body.classList.remove('green'); }
+  else if(currentUser.theme === 'green'){ document.body.classList.add('green'); document.body.classList.remove('light'); }
+  else { document.body.classList.remove('light'); document.body.classList.remove('green'); }
+
+  // Initialisiere alle Firebase Listener NUR EINMAL
+  renderFeed();
+  renderContacts();
+  renderChatContactsRight();
+  updateChatsList();
+  computeUnread();
+  onValue(ref(db,'chats'), ()=> computeUnread());
+
+  // nav bindings
+  navHome.addEventListener('click', ()=>{ setActive(navHome); showView(viewHome); });
+  navPosts.addEventListener('click', ()=>{ setActive(navPosts); showView(viewPosts); });
+  navChat.addEventListener('click', ()=>{ setActive(navChat); showView(viewChat); });
+  navGame.addEventListener('click', ()=>{ setActive(navGame); showView(viewGame); initEmojiGame(); });
+  navProfile.addEventListener('click', ()=>{ setActive(navProfile); showView(viewProfile); });
+  navLogout.addEventListener('click', ()=> logout());
+  document.getElementById('quickPost').addEventListener('click', ()=>{ setActive(navPosts); showView(viewPosts); });
+  document.getElementById('quickChat').addEventListener('click', ()=>{ setActive(navChat); showView(viewChat); });
+  document.getElementById('quickGame').addEventListener('click', ()=>{ setActive(navGame); showView(viewGame); initEmojiGame(); });
+
+  // Profil und Theme
+  profileBtn.addEventListener('click', ()=> profilePanel.style.display = profilePanel.style.display === 'block' ? 'none' : 'block');
+  panelClose.addEventListener('click', ()=> profilePanel.style.display='none');
+  panelLogout.addEventListener('click', ()=> logout());
+
+  themeSelect.addEventListener('change', e => setTheme(e.target.value));
+  panelThemeSelect.addEventListener('change', e => setTheme(e.target.value));
+
+  previewDark.addEventListener('click', ()=> setTheme('dark'));
+  previewLight.addEventListener('click', ()=> setTheme('light'));
+  previewGreen.addEventListener('click', ()=> setTheme('green'));
+  panelPreviewDark.addEventListener('click', ()=> setTheme('dark'));
+  panelPreviewLight.addEventListener('click', ()=> setTheme('light'));
+  panelPreviewGreen.addEventListener('click', ()=> setTheme('green'));
+
+  // Chat-Toggle
+  chatToggle.addEventListener('click', ()=> chatSidebar.classList.toggle('open'));
+  chatClose.addEventListener('click', ()=> chatSidebar.classList.remove('open'));
+
+  // Emoji Game:
+  activeEmoji.addEventListener('click', clickEmoji);
+  upgradeBtn.addEventListener('click', upgradeMultiplier);
+  resetGameBtn.addEventListener('click', resetGame);
+
+  // Local Storage
+  localStorage.setItem('loggedUser', currentUser.uid);
+
+  // initialisiere Game nur einmal
+  initEmojiGame(true);
+}
+
+/* LOGOUT */
+function logout(){ localStorage.removeItem('loggedUser'); location.reload(); }
+
+/* POSTS */
+/* RENDER FEED */
+function renderFeed(){
+  composerInitial.textContent = (currentUser.username||'?').charAt(0).toUpperCase();
+  const postsRef = ref(db,'posts');
+  // Sicherstellung, dass der Listener nur einmal gebunden wird
+  if(renderFeed._bound) return;
+  renderFeed._bound = true;
+
+  onValue(postsRef, snap=>{
+    const data = snap.val() || {};
+    feedArea.innerHTML = '';
+    const entries = Object.entries(data).sort((a,b)=>b[1].time - a[1].time);
+    entries.forEach(([key,p])=>{
+      const block = document.createElement('div'); block.className='postCard';
+      const left = document.createElement('div'); left.innerHTML = `<div class="initialCircle">${(p.author||'?').charAt(0).toUpperCase()}</div>`;
+      const body = document.createElement('div'); body.style.flex='1';
+      const meta = document.createElement('div'); meta.className='meta'; meta.textContent = `${p.author} • ${new Date(p.time).toLocaleString()}`;
+      const txt = document.createElement('div'); txt.style.marginTop='8px'; txt.textContent = p.text || '';
+      body.appendChild(meta); body.appendChild(txt);
+
+      const acts = document.createElement('div'); acts.className='actions';
+      const likeBtn = el('button', `❤️ ${p.likes ? Object.keys(p.likes).length : 0}`); likeBtn.className='btn like';
+      likeBtn.addEventListener('click', async ()=>{
+        const likePath = `posts/${key}/likes/${currentUser.uid}`;
+        const cur = (await get(ref(db, likePath))).exists();
+        if(cur) await set(ref(db, likePath), null); else await set(ref(db, likePath), true);
+      });
+      acts.appendChild(likeBtn);
+
+      if(currentUser.username === p.author){
+        const editBtn = el('button','✏️'); editBtn.className='btn';
+        editBtn.addEventListener('click', ()=>{
+          const ta = document.createElement('textarea'); ta.className='textarea'; ta.value = p.text || '';
+          const save = el('button','💾'); save.className='btn primary';
+          save.addEventListener('click', ()=> update(ref(db, `posts/${key}`), {text: ta.value}));
+          body.replaceChild(ta, txt);
+          acts.appendChild(save);
+        });
+        acts.appendChild(editBtn);
+      }
+      if(currentUser.isAdmin || currentUser.username === p.author){
+        const del = el('button','🗑'); del.className='btn';
+        del.addEventListener('click', ()=>{ if(confirm('Post löschen?')) set(ref(db, `posts/${key}`), null); });
+        acts.appendChild(del);
+      }
+      body.appendChild(acts);
+
+      const commentBox = document.createElement('div'); commentBox.className='commentBox';
+      const inpt = document.createElement('input'); inpt.className='input'; inpt.placeholder='Kommentiere...';
+      inpt.addEventListener('keydown', e=>{
+        if(e.key === 'Enter' && inpt.value.trim()){
+          push(ref(db, `posts/${key}/comments`), {author: currentUser.username, authorUid: currentUser.uid, text: inpt.value.trim(), time: now()});
+          inpt.value='';
+        }
+      });
+      commentBox.appendChild(inpt);
+      if(p.comments){
+        Object.entries(p.comments).forEach(([ck,c])=>{
+          const cd = document.createElement('div'); cd.className='comment';
+          cd.innerHTML = `<div class="meta"><b>${c.author}</b> • ${new Date(c.time).toLocaleString()}</div><div class="cText">${c.text}</div>`;
+          if(currentUser.uid === c.authorUid){
+            const eb = el('button','✏️'); eb.className='btn';
+            eb.addEventListener('click', ()=>{
+              const ta = document.createElement('textarea'); ta.className='textarea'; ta.value = c.text;
+              const sv = el('button','💾'); sv.className='btn primary';
+              sv.addEventListener('click', ()=> update(ref(db, `posts/${key}/comments/${ck}`), {text: ta.value}));
+              cd.querySelector('.cText').replaceWith(ta);
+              cd.appendChild(sv);
+            });
+            const dl = el('button','🗑'); dl.className='btn';
+            dl.addEventListener('click', ()=>{ if(confirm('Kommentar löschen?')) set(ref(db, `posts/${key}/comments/${ck}`), null); });
+            cd.appendChild(eb); cd.appendChild(dl);
+          }
+          if(currentUser.isAdmin && currentUser.uid !== c.authorUid){
+            const dl2 = el('button','🗑(Admin)'); dl2.className='btn';
+            dl2.addEventListener('click', ()=>{ if(confirm('Admin löscht Kommentar?')) set(ref(db, `posts/${key}/comments/${ck}`), null); });
+            cd.appendChild(dl2);
+          }
+          commentBox.appendChild(cd);
+        });
+      }
+      body.appendChild(commentBox);
+
+      block.appendChild(left); block.appendChild(body);
+      feedArea.appendChild(block);
+    });
+  });
+}
+
+
+/* CONTACTS + CHAT */
+function renderContacts(){
+  const usersRef = ref(db, 'users');
+  if(renderContacts._bound) return;
+  renderContacts._bound = true;
+
+  onValue(usersRef, snap=>{
+    contactsList.innerHTML = '';
+    usersCache = {};
+    snap.forEach(s=>{
+      const u = s.val();
+      if(!u.code || u.code !== '8bschul' || u.uid === currentUser.uid) return;
+      usersCache[u.uid] = u;
+      const row = document.createElement('div'); row.className='navItem';
+      const initials = el('div', (u.username||'?').charAt(0).toUpperCase()); initials.className='logoCircle'; initials.style.width='36px'; initials.style.height='36px'; initials.style.fontSize='14px';
+      row.appendChild(initials);
+      row.appendChild(el('span', u.first || u.username));
+      row.setAttribute('data-uid', u.uid);
+      row.addEventListener('click', ()=> startChat(u.uid, u.first || u.username, false));
+      contactsList.appendChild(row);
+    });
+  });
+}
+
+function renderChatContactsRight(){
+  const usersRef = ref(db, 'users');
+  if(renderChatContactsRight._bound) return;
+  renderChatContactsRight._bound = true;
+
+  onValue(usersRef, snap=>{
+    chatContactsRight.innerHTML = '';
+    snap.forEach(s=>{
+      const u = s.val();
+      if(!u.code || u.code !== '8bschul' || u.uid === currentUser.uid) return;
+      const row = document.createElement('div'); row.className='navItem';
+      const initials = el('div', (u.username||'?').charAt(0).toUpperCase()); initials.className='logoCircle'; initials.style.width='30px'; initials.style.height='30px'; initials.style.fontSize='12px';
+      row.appendChild(initials);
+      row.appendChild(el('span', u.first || u.username));
+      row.setAttribute('data-uid', u.uid);
+      row.addEventListener('click', ()=> startChat(u.uid, u.first || u.username, true));
+      chatContactsRight.appendChild(row);
+    });
+  });
+}
+
+
+function getChatId(otherUid){
+  return currentUser.uid < otherUid ? `${currentUser.uid}_${otherUid}` : `${otherUid}_${currentUser.uid}`;
+}
+
+function updateChatsList(){
+  const chatsRef = ref(db,'chats');
+  if(updateChatsList._bound) return;
+  updateChatsList._bound = true;
+
+  onValue(chatsRef, snap=>{
+    let chatData = snap.val() || {};
+    let myChats = {};
+    Object.keys(chatData).forEach(chatId => {
+      if(chatId.includes(currentUser.uid)){
+        myChats[chatId] = chatData[chatId];
+      }
+    });
+  });
+}
+
+function computeUnread(){
+  const chatsRef = ref(db, 'chats');
+  if(computeUnread._bound) return;
+  computeUnread._bound = true;
+
+  onValue(chatsRef, snap => {
+    let total = 0;
+    const chats = snap.val() || {};
+    for (const chatId in chats) {
+      if (chatId.includes(currentUser.uid)) {
+        const otherUid = chatId.replace(currentUser.uid, '').replace('_', '');
+        const unreadKey = `unread_${otherUid}`;
+        if (chats[chatId][unreadKey] && chats[chatId][unreadKey][currentUser.uid]) {
+          total += chats[chatId][unreadKey][currentUser.uid];
+        }
+      }
+    }
+    unreadTotal = total;
+    if (total > 0) {
+      bellCount.textContent = total;
+      bellCount.classList.remove('hidden');
+    } else {
+      bellCount.classList.add('hidden');
+    }
+  });
+}
+
+
+function startChat(otherUid, otherName, isSidebar){
+  currentChatUid = otherUid;
+  const chatId = getChatId(otherUid);
+  const messagesRef = ref(db, `chats/${chatId}/messages`);
+
+  // 1. Setze UI
+  const inputId = isSidebar ? 'chatSidebarInput' : 'chatFullInput';
+  const sendId = isSidebar ? 'chatSidebarSend' : 'chatFullSend';
+
+  if(isSidebar){
+    chatSidebarWindow.style.display = 'flex';
+    chatSidebarTitle.textContent = `Chat mit ${otherName}`;
+    document.getElementById(inputId).placeholder = `Nachricht an ${otherName}...`;
+  } else {
+    chatHeaderFull.textContent = `Chat mit ${otherName}`;
+    document.getElementById(inputId).placeholder = `Nachricht an ${otherName}...`;
+  }
+
+  // 2. Lade Nachrichten und binde Sender-Events neu (um Duplikate zu verhindern)
+  const inputEl = document.getElementById(inputId);
+  const sendBtn = document.getElementById(sendId);
+
+  // Ersetze Input und Button, um Event-Listener zu entfernen
+  inputEl.replaceWith(inputEl.cloneNode(true));
+  sendBtn.replaceWith(sendBtn.cloneNode(true));
+
+  const newChatInput = document.getElementById(inputId);
+  const newChatSend = document.getElementById(sendId);
+
+  const sender = () => sendMessage(otherUid, newChatInput, newChatSend);
+
+  newChatSend.addEventListener('click', sender);
+  newChatInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter') sender();
+  });
+
+  // Entferne alte onValue-Listener, bevor ein neuer hinzugefügt wird
+  if(startChat.listenerRef) off(messagesRef, 'value', startChat.listenerRef);
+
+  const listener = snap=>{
+    const messages = snap.val() || {};
+    const msgsEl = isSidebar ? chatSidebarMessages : chatFullMessages;
+    msgsEl.innerHTML = '';
+    Object.values(messages).sort((a,b)=>a.time-b.time).forEach(msg=>{
+      const isMe = msg.authorUid === currentUser.uid;
+      const m = el('div'); m.className = `msg ${isMe ? 'me' : ''}`;
+      m.innerHTML = `<div class="bubble">${msg.text}</div>`;
+      msgsEl.appendChild(m);
+    });
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    markAsRead(chatId);
+  };
+
+  onValue(messagesRef, listener);
+  startChat.listenerRef = listener; // Speichere den Listener-Callback zum Entfernen
+
+}
+
+async function sendMessage(otherUid, inputEl, sendBtn){
+  const text = inputEl.value.trim();
+  if(!text) return;
+  sendBtn.disabled = true;
+  inputEl.disabled = true;
+
+  const chatId = getChatId(otherUid);
+  const msg = {
+    text,
+    author: currentUser.first || currentUser.username,
+    authorUid: currentUser.uid,
+    time: now(),
+    read: false
+  };
+  const msgPath = `chats/${chatId}/messages`;
+  await push(ref(db, msgPath), msg);
+
+  // Markiere ungelesene für den Empfänger (otherUid)
+  const unreadPath = `chats/${chatId}/unread_${otherUid}/${otherUid}`;
+  const unreadCountSnap = await get(ref(db, unreadPath));
+  const newCount = (unreadCountSnap.val() || 0) + 1;
+  await set(ref(db, unreadPath), newCount);
+
+  inputEl.value = '';
+  sendBtn.disabled = false;
+  inputEl.disabled = false;
+  inputEl.focus();
+}
+
+async function markAsRead(chatId){
+  const unreadPath = `chats/${chatId}/unread_${currentUser.uid}/${currentUser.uid}`;
+  await set(ref(db, unreadPath), 0);
+}
+
+
+/* THEME */
+function setTheme(theme){
+  const body = document.body;
+  body.classList.remove('light','green','dark');
+  if(theme !== 'dark') body.classList.add(theme);
+  // Update Theme in DB
+  update(ref(db, `users/${currentUser.uid}`), {theme});
+}
+
+/* EMOJI GAME */
+const emojiList = ['😀', '😂', '😍', '😎', '😜', '🤩', '🥳', '🤯', '🥶', '🔥'];
+let currentEmoji = '😀';
+let points = 0;
+let multiplier = 1;
+let unlockedEmojis = ['😀'];
+let levelCost = 20;
+
+function initEmojiGame(loadFromUser = false){
+  if(loadFromUser){
+    points = currentUser.points || 0;
+    multiplier = currentUser.multiplier || 1;
+    unlockedEmojis = currentUser.unlockedEmojis || ['😀'];
+  }
+
+  if(unlockedEmojis.length > 0){
+    currentEmoji = unlockedEmojis[unlockedEmojis.length-1];
+  } else {
+    currentEmoji = '😀';
+  }
+  activeEmoji.textContent = currentEmoji;
+  updateGameUI();
+}
+
+async function updateGameInDb(){
+  await update(ref(db, `users/${currentUser.uid}`), {points, multiplier, unlockedEmojis});
+}
+
+function updateGameUI(){
+  gamePointsEl.textContent = points;
+  upgradeBtn.textContent = `Upgrade (x${multiplier*2} für ${levelCost} Punkte)`;
+  if(points < levelCost) upgradeBtn.disabled = true; else upgradeBtn.disabled = false;
+  gameProgress.style.width = `${Math.min(100, (points / levelCost) * 100)}%`;
+
+  unlockedList.innerHTML = '';
+  emojiList.forEach(e=>{
+    const span = el('span', e);
+    span.style.opacity = unlockedEmojis.includes(e) ? 1 : 0.2;
+    span.style.cursor = unlockedEmojis.includes(e) ? 'pointer' : 'default';
+    if(unlockedEmojis.includes(e)){
+      span.addEventListener('click', ()=> { currentEmoji = e; activeEmoji.textContent = e; });
+    }
+    unlockedList.appendChild(span);
+  });
+}
+
+function clickEmoji(e){
+  const clicks = multiplier;
+  points += clicks;
+  activeEmoji.style.transform = 'scale(0.9)';
+  setTimeout(()=> activeEmoji.style.transform = 'scale(1)', 80);
+
+  spawnParticle(e.clientX, e.clientY, `+${clicks}`);
+
+  checkUnlock();
+  updateGameUI();
+  updateGameInDb();
+}
+
+function spawnParticle(x, y, text){
+  const p = el('div', text);
+  p.className = 'particle';
+  p.style.left = `${x}px`;
+  p.style.top = `${y}px`;
+  document.body.appendChild(p);
+  setTimeout(()=>{
+    p.style.opacity = 1;
+    p.style.transform = `translate(-50%, -150px) scale(1.2)`;
+  }, 10);
+  setTimeout(()=> p.remove(), 500);
+}
+
+function upgradeMultiplier(){
+  if(points >= levelCost){
+    points -= levelCost;
+    multiplier *= 2;
+    levelCost *= 4;
+    updateGameUI();
+    updateGameInDb();
+  }
+}
+
+function checkUnlock(){
+  const currentUnlockIndex = unlockedEmojis.length;
+  if(currentUnlockIndex < emojiList.length){
+    const neededPoints = [0, 5, 20, 50, 100, 250, 500, 1000, 2000, 5000];
+    if(points >= neededPoints[currentUnlockIndex]){
+      const newEmoji = emojiList[currentUnlockIndex];
+      unlockedEmojis.push(newEmoji);
+      currentEmoji = newEmoji;
+      activeEmoji.textContent = newEmoji;
+      alert(`🥳 Neues Emoji freigeschaltet: ${newEmoji}!`);
+    }
+  }
+}
+
+function resetGame(){
+  if(confirm('Spielstand zurücksetzen? Punkte, Multiplikator und freigeschaltete Emojis gehen verloren!')){
+    points = 0;
+    multiplier = 1;
+    unlockedEmojis = ['😀'];
+    levelCost = 20;
+    initEmojiGame();
+    updateGameInDb();
+  }
+}
+
+
+// Check if user is already logged in on page load
+const storedUid = localStorage.getItem('loggedUser');
+if(storedUid){
+  get(child(ref(db, 'users'), storedUid)).then(snap => {
+    if(snap.exists()){
+      currentUser = snap.val();
+      afterLogin();
+    }
+  });
+}
+
+</script>
+</body>
+</html>
